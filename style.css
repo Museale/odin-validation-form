@@ -16,6 +16,14 @@ form > fieldset span {
   gap: 5px;
 }
 
-label {
+label, input, select {
   display: block;
+}
+
+input[type=submit] {
+  margin: 15px 0px 0px;
+}
+
+select {
+  width: 180px;
 }/*# sourceMappingURL=style.css.map */
