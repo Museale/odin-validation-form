@@ -1,21 +1,3 @@
-//first and second name validation requires a regexp text pattern, not null, no longer than 20 characters
-
-// email requires an email ( including @ ) no longer than 30 characters
-
-// country requires a text input no longer than 20 characters
-
-//zip requires a zip-code pattern no more than 4 numbers
-
-// password regex pattern 
-
-//confirmed password has to match password input 
-
-//I will need a validate function to check whether or not the inputfields are empty, 
-//1. return error messages for the fields that are empty
-//2. return error messages if the field does not match its specified format
-//3. return error if too short too long and how much is missing or out of range
-
-
 const get = (() => {
 
     const form = document.querySelector("form");
@@ -26,7 +8,6 @@ const get = (() => {
     const password = document.getElementById('input-password');
     const confirmPassword = document.getElementById('input-confirm-password');
     const submitBtn = document.getElementById('input-submit');
-
     const nameError = name.nextElementSibling;
     const emailError = email.nextElementSibling;
     const countryError = country.nextElementSibling;
@@ -71,49 +52,18 @@ get.form.addEventListener('load', () => {
     get.confirmPassword.className = confirmPasswordValid ? 'valid' : 'invalid';
 });
 
-get.name.addEventListener('input', () => {
-    const nameValid = get.name.value === 0 || nameRegExp.test(get.name.value);
-    if (nameValid) {
-        get.name.className = 'valid';
-        get.nameError.textContent = '';
-        get.nameError.className = 'error';
+const validateThis = (input, error, regex) => {
+    const isValid = input.value.length === 0 || regex.test(input.value);
+    if (isValid) {
+        input.className = 'valid';
+        error.textContent = '';
+        error.className = 'error';
     } else {
-        get.name.className = 'invalid';
+        input.className = 'invalid';
     }
-})
+};
 
-get.email.addEventListener('input', () => {
-    const emailValid = get.email.value.length === 0 || emailRegExp.test(get.email.value);
-    if (emailValid) {
-        get.email.className = 'valid';
-        get.emailError.textContent = '';
-        get.emailError.className = 'error';
-    } else {
-        get.email.className = 'invalid';
-    }
-})
-
-get.zipCode.addEventListener('input', () => {
-    const zipValid = get.zipCode.value.length === 0 || zipRegExp.test(get.zipCode.value);
-    if (zipValid) {
-        get.zipCode.className = 'valid';
-        get.zipCodeError.textContent='';
-        get.zipCodeError.className = 'error';
-    } else {
-        get.zipCode.className = 'invalid';
-    }
-});
-
-get.password.addEventListener('input', () => {
-    
-})
-
-get.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const nameIsValid = get.name.value.length === 0 || nameRegExp.test(get.name.value);
-    const emailIsValid = get.email.value.length === 0 || emailRegExp.test(get.email.value);
-    const zipValid = get.zipCode.value.length === 0 || zipRegExp.test(get.zipCode.value);
+const validateForm = (nameIsValid, emailIsValid, zipValid, passwordValid, confirmPasswordValid) => {
     
     if(!nameIsValid) {
         get.name.className = 'invalid';
@@ -145,4 +95,57 @@ get.form.addEventListener('submit', (e) => {
         get.zipCodeError.className = 'error';
       }  
 
+    if (!passwordValid) {
+        get.password.className = 'invalid';
+        get.passwordError.textContent = 'Please use minimum 8 characters, and at least one number.'
+        get.passwordError.className = 'error active';
+    } else if (passwordValid) {
+        get.password.className = 'valid';
+        get.passwordError.textContent = '';
+        get.passwordError.className = 'error';
+    }
+
+    if (!confirmPasswordValid) {
+        get.confirmPassword.className = 'invalid';
+        get.confirmPasswordError.textContent = 'Your passwords have to match.'
+        get.confirmPasswordError.className = 'error active';
+    } else if (confirmPasswordValid) {
+        get.confirmPassword.className = 'valid';
+        get.confirmPasswordError.textContent = '';
+        get.confirmPasswordError.className = 'error';
+    }
+
+    
+}
+
+get.name.addEventListener('input', validateThis(get.name, get.nameError, nameRegExp))
+
+get.email.addEventListener('input', validateThis(get.email, get.emailError, emailRegExp))
+
+get.zipCode.addEventListener('input', validateThis(get.zipCode, get.zipCodeError, zipRegExp));
+
+get.password.addEventListener('input', validateThis(get.password, get.passwordError, passwordRegExp));
+
+
+get.form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nameIsValid = get.name.value.length !== 0 || nameRegExp.test(get.name.value);
+    const emailIsValid = get.email.value.length !== 0 || emailRegExp.test(get.email.value);
+    const zipValid = get.zipCode.value.length !== 0 || zipRegExp.test(get.zipCode.value);
+    const passwordValid = get.password.value.length !== 0 || passwordRegExp.test(get.password.value);
+    const confirmPasswordValid = get.confirmPassword.value === get.password.value;
+
+    validateForm(nameIsValid, emailIsValid, zipValid, passwordValid, confirmPasswordValid);
+    
+})
+
+get.form.addEventListener('change', (e) => {
+    const nameIsValid = get.name.value.length === 0 || nameRegExp.test(get.name.value);
+    const emailIsValid = get.email.value.length === 0 || emailRegExp.test(get.email.value);
+    const zipValid = get.zipCode.value.length === 0 || zipRegExp.test(get.zipCode.value);
+    const passwordValid = get.password.value.length === 0 || passwordRegExp.test(get.password.value);
+    const confirmPasswordValid = get.confirmPassword.value === get.password.value;
+
+    validateForm(nameIsValid, emailIsValid, zipValid, passwordValid, confirmPasswordValid)
 })

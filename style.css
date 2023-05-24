@@ -26,4 +26,12 @@ input[type=submit] {
 
 select {
   width: 180px;
+}
+
+.invalid:focus {
+  outline: red;
+}
+
+.invalid {
+  border: 1px solid red;
 }/*# sourceMappingURL=style.css.map */
